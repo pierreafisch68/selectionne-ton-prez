@@ -158,12 +158,12 @@ h3 { font-size: 18px; margin: 0 0 12px; }
 .step {
   margin: 16px -18px 0; height: 0; display: grid; place-items: center; overflow: hidden;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
-  font-family: Fraunces, Georgia, serif; font-size: 40px; font-weight: 800; color: rgba(255, 255, 255, 0.6);
+  font-family: Fraunces, Georgia, serif; font-size: 40px; font-weight: 800; line-height: 1; color: rgba(255, 255, 255, 0.6);
   transition: height 0.9s cubic-bezier(.2, .8, .2, 1);
 }
-.place-1 .step.up { height: 110px; }
-.place-2 .step.up { height: 70px; transition-delay: 0.15s; }
-.place-3 .step.up { height: 44px; transition-delay: 0.3s; }
+.place-1 .step.up { height: 120px; }
+.place-2 .step.up { height: 88px; transition-delay: 0.15s; }
+.place-3 .step.up { height: 64px; transition-delay: 0.3s; }
 
 .ranking, .detail { margin-top: 18px; }
 .rank-row { display: grid; grid-template-columns: 28px minmax(140px, 1.2fr) 2fr 56px; align-items: center; gap: 12px; padding: 8px 0; }
