@@ -273,15 +273,23 @@
     const sol = topic.questions.find((q) => q.step === "solution") || topic.questions[topic.questions.length - 1];
     const ans = state.answers[sol.id];
     const yours = ans === undefined || ans === -1 ? "Sans avis" : sol.options[ans].t;
+    const answered = ans !== undefined && ans !== -1;
+    // Candidats qui défendent la solution choisie, y compris hors podium
+    const holders = answered ? Q.candidates.filter((c) => sol.positions[c.id] && sol.positions[c.id].idx === ans) : [];
+    const holdersLine = !answered ? "" : holders.length
+      ? `<div class="holders">Défendue par : ${holders.map((c) => `<span class="chip" style="--col:${c.color}"><i></i>${esc(c.name)}${sol.positions[c.id].tag ? ` <small>(${tagLabel(sol.positions[c.id].tag)})</small>` : ""}</span>`).join("")}</div>`
+      : `<div class="holders muted">Aucun des candidats ne défend cette solution.</div>`;
+    const topIds = new Set(top.map((r) => r.c.id));
+    const shown = top.concat(holders.filter((c) => !topIds.has(c.id)).map((c) => ({ c, extra: true })));
     return `
       <details class="topic">
         <summary><span>${topic.icon} ${esc(topic.title)}</span>${state.important.has(topic.id) ? `<span class="tag star-tag">★ important</span>` : ""}</summary>
-        <div class="yours"><b>Votre solution :</b> ${esc(yours)}</div>
+        <div class="yours"><b>Votre solution :</b> ${esc(yours)}${holdersLine}</div>
         <div class="ev-grid">
-          ${top.map((r) => {
+          ${shown.map((r) => {
             const pos = sol.positions[r.c.id];
-            return `<div class="ev" style="--col:${r.c.color}">
-              <h4>${esc(r.c.name)} ${pos && ans === pos.idx ? `<span class="tag ok">même choix</span>` : ""}</h4>
+            return `<div class="ev${r.extra ? " extra" : ""}" style="--col:${r.c.color}">
+              <h4>${esc(r.c.name)} ${pos && ans === pos.idx ? `<span class="tag ok">même choix</span>` : ""}${r.extra ? ` <span class="tag">hors podium</span>` : ""}</h4>
               <p>${pos ? esc(sol.options[pos.idx].t) : `<span class="muted">Pas de position connue.</span>`}${pos && pos.tag ? ` <span class="tag">${tagLabel(pos.tag)}</span>` : ""}</p>
               ${evidenceHtml(topic, r.c.id)}
             </div>`;

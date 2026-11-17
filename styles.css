@@ -180,6 +180,11 @@ details.topic summary { cursor: pointer; list-style: none; display: flex; justif
 details.topic summary::after { content: "+"; font-size: 20px; color: var(--muted); }
 details.topic[open] summary::after { content: "−"; }
 .yours { padding: 10px 14px; border-radius: 12px; background: rgba(108, 140, 255, 0.12); margin-bottom: 12px; }
+.holders { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+.holders .chip { display: inline-flex; align-items: center; gap: 6px; color: var(--text); }
+.holders .chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--col); }
+.holders small { color: var(--muted); }
+.ev.extra { background: rgba(255, 255, 255, 0.02); border-left-style: dashed; }
 .ev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; padding-bottom: 12px; }
 .ev { padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); border-left: 4px solid var(--col); }
 .ev h4 { margin: 0 0 6px; font-size: 15px; }
