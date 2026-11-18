@@ -230,6 +230,8 @@
           ${Q.topics.map((t) => topicDetail(t, top)).join("")}
         </div>
 
+        ${referencesHtml(ranking)}
+
         <div class="actions">
           <button class="btn primary" id="restart">Recommencer</button>
           <button class="btn ghost" id="method">Méthode et sources</button>
@@ -264,6 +266,30 @@
         <p class="credit" data-credit="${r.c.id}"></p>
         <div class="step"><span>${place}</span></div>
       </article>`;
+  }
+
+  // Références : toutes les sources, regroupées par candidat (ordre du classement)
+  function referencesHtml(ranking) {
+    const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return ""; } };
+    const groups = ranking.map((r) => {
+      const bySrc = new Map();
+      Q.topics.forEach((t) => {
+        const ev = t.evidence[r.c.id];
+        if (!ev || !Q.sources[ev.s]) return;
+        if (!bySrc.has(ev.s)) bySrc.set(ev.s, []);
+        bySrc.get(ev.s).push(t.title);
+      });
+      if (!bySrc.size) return "";
+      return `<div class="ref-group" style="--col:${r.c.color}">
+          <h4>${esc(r.c.name)} <span class="muted">· ${esc(r.c.party)}</span></h4>
+          <ol>${[...bySrc].map(([k, topics]) => `<li><a href="${esc(Q.sources[k])}" target="_blank" rel="noopener">${esc(Q.sourceLabels[k] || k)}</a> <span class="ref-host">${esc(host(Q.sources[k]))}</span><span class="ref-topics">${topics.map(esc).join(" · ")}</span></li>`).join("")}</ol>
+        </div>`;
+    }).join("");
+    return `<div class="card references" id="references">
+          <h3>Références</h3>
+          <p class="muted">Toutes les sources des citations utilisées dans ce quiz, par candidat, avec les thèmes qu'elles documentent. Données du ${esc(Q.version)}.</p>
+          <div class="ref-grid">${groups}</div>
+        </div>`;
   }
 
   function evidenceHtml(topic, cid) {
