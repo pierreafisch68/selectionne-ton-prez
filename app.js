@@ -81,12 +81,18 @@
           <button class="btn primary big" id="start">Commencer le quiz <span aria-hidden="true">→</span></button>
           <span class="muted">Environ 8 minutes · Anonyme · Aucune inscription</span>
         </div>
+        <h2 class="cands-title">Les ${Q.candidates.length} candidats comparés</h2>
+        <ul class="cands">
+          ${Q.candidates.map((c) => `<li style="--col:${c.color}"><div class="photo mini" data-photo="${c.id}"><span class="ini">${initials(c.name)}</span></div><b>${esc(c.name)}</b><span>${esc(c.party)}</span></li>`).join("")}
+        </ul>
+        <p class="muted small cands-note">D'autres candidats seront ajoutés à mesure que leurs programmes seront publiés.</p>
         <div class="facts">
           <div><b>Neutre</b><span>Les réponses sont mélangées à chaque question, et les noms n'apparaissent qu'à la fin.</span></div>
           <div><b>Sourcé</b><span>Chaque position renvoie à une citation et à la page où elle a été trouvée.</span></div>
           <div><b>Anonyme</b><span>Ni compte, ni cookie, ni adresse IP conservée.</span></div>
         </div>
       </section>`);
+    app.querySelectorAll("[data-photo]").forEach(loadPhoto);
     document.getElementById("start").onclick = () => { state.i = 0; renderQuestion(); };
   }
 
@@ -308,6 +314,7 @@
       if (!info) return;
       el.style.backgroundImage = `url("${info.src}")`;
       el.classList.add("has-img");
+      if (info.credit) el.title = `Photo : ${info.credit} (${info.license || "Wikimedia Commons"})`;
       const cr = app.querySelector(`[data-credit="${c.id}"]`);
       if (cr && info.credit) cr.innerHTML = `Photo : ${esc(info.credit)} · <a href="${esc(info.page)}" target="_blank" rel="noopener">${esc(info.license || "Wikimedia Commons")}</a>`;
     }).catch(() => {});
